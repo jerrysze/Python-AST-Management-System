@@ -5,5 +5,6 @@ public class ASTManager {
         System.out.println("Begin to start ASTManager...");
         ASTManagerEngine engine = new ASTManagerEngine();
         engine.userInterface();
+
     }
 }
