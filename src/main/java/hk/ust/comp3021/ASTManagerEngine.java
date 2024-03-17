@@ -367,4 +367,12 @@ public class ASTManagerEngine {
             }
         }
     }
+
+    public String getDefaultXMLFileDir(){
+        return defaultXMLFileDir;
+    }
+
+    public HashMap<String, ASTModule> getId2ASTModules(){
+        return id2ASTModules;
+    }
 }

@@ -54,12 +54,10 @@ public class WhileStmt extends ASTStmt {
         // TODO: complete the definition of the method `countChildren`
         int numChild = 3;
         numChild += this.test.countChildren();
-        for(ASTStmt child : this.body)
-        {
+        for(ASTStmt child : this.body){
             numChild += child.countChildren();
         }
-        for (ASTStmt child : this.orelse)
-        {
+        for (ASTStmt child : this.orelse){
             numChild += child.countChildren();
         }
         return numChild;

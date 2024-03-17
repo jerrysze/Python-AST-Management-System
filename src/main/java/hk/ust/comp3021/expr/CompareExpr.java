@@ -50,8 +50,7 @@ public class CompareExpr extends ASTExpr {
         // TODO: complete the definition of the method `countChildren`
         int numChild = 1 + comparators.size();
         numChild += left.countChildren();
-        for(ASTExpr child : comparators)
-        {
+        for(ASTExpr child : comparators){
             numChild += child.countChildren();
         }
         return numChild;

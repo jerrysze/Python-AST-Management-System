@@ -68,12 +68,10 @@ public class CallExpr extends ASTExpr {
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
         int numChild = 1 + args.size() + keywords.size();
-        for(ASTExpr child : this.args)
-        {
+        for(ASTExpr child : this.args){
             numChild += child.countChildren();
         }
-        for (ASTKeyWord child : this.keywords)
-        {
+        for (ASTKeyWord child : this.keywords){
             numChild += child.countChildren();
         }
         return numChild;

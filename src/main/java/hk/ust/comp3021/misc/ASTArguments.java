@@ -65,12 +65,10 @@ public class ASTArguments extends ASTElement {
     public ASTArguments(XMLNode node) {
         // TODO: complete the definition of the constructor. Define the class as the subclass of ASTElement.
         super(node);
-        for(XMLNode child : node.getChildByIdx(0).getChildren())
-        {
+        for(XMLNode child : node.getChildByIdx(0).getChildren()){
             args.add(new ASTArg(child));
         }
-        for(XMLNode child : node.getChildByIdx(1).getChildren())
-        {
+        for(XMLNode child : node.getChildByIdx(1).getChildren()){
             defaults.add(ASTExpr.createASTExpr(child));
         }
     }

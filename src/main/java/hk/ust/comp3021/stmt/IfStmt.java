@@ -53,12 +53,10 @@ public class IfStmt extends ASTStmt {
         // TODO: complete the definition of the method `countChildren`
         int numChild = 3;
         numChild += test.countChildren();
-        for(ASTStmt child : body)
-        {
+        for(ASTStmt child : body) {
             numChild += child.countChildren();
         }
-        for (ASTStmt child : orelse)
-        {
+        for (ASTStmt child : orelse) {
             numChild += child.countChildren();
         }
         return numChild;

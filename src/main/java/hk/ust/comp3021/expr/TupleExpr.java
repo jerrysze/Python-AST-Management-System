@@ -47,8 +47,7 @@ public class TupleExpr extends ASTExpr {
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
         int count = elts.size();
-        for (ASTExpr child : this.elts)
-        {
+        for (ASTExpr child : this.elts){
             count += child.countChildren();
         }
         return count;

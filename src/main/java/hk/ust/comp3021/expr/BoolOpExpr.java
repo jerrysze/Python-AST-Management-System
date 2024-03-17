@@ -32,8 +32,7 @@ public class BoolOpExpr extends ASTExpr {
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
         int numChild = this.values.size();
-        for(ASTExpr child : this.values)
-        {
+        for(ASTExpr child : this.values){
             numChild += child.countChildren();
         }
         return numChild;

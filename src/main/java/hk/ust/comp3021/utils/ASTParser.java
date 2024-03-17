@@ -160,6 +160,8 @@ public class ASTParser {
 
         return endIndex;
     }
-
+    public XMLNode getRootXMLNode(){
+        return rootXMLNode;
+    }
 
 }
