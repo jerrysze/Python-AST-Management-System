@@ -19,6 +19,25 @@ public class FunctionDefStmt extends ASTStmt {
     public FunctionDefStmt(XMLNode node) {
         // TODO: complete the definition of the constructor. Define the class as the subclass of ASTExpr.
         super(node);
+        this.stmtType = StmtType.FunctionDef;
+        this.name = node.getAttribute("name");
+        this.args = new ASTArguments(node.getChildByIdx(0));
+
+        XMLNode bodyNode = node.getChildByIdx(1);
+        if (bodyNode != null) {
+            for (XMLNode child : bodyNode.getChildren()) {
+                this.body.add(ASTStmt.createASTStmt(child));
+            }
+        }
+
+        XMLNode decoratorListNode = node.getChildByIdx(2);
+        if (decoratorListNode != null) {
+            for (XMLNode child : decoratorListNode.getChildren()) {
+                this.decoratorList.add(ASTExpr.createASTExpr(child));
+            }
+        }
+
+        this.returns = ASTExpr.createASTExpr(node.getChildByIdx(3));
     }
 
     /*
@@ -29,7 +48,14 @@ public class FunctionDefStmt extends ASTStmt {
      * */
     public ArrayList<CallExpr> getAllCalledFunc() {
         // TODO: complete the definition of the method `getAllCalledFunc`
-        return null;
+        ArrayList<CallExpr> calledFuncs = new ArrayList<>();
+        ArrayList<ASTElement> children = this.getChildren();
+        for (ASTElement child : children) {
+            if (child instanceof CallExpr) {
+                calledFuncs.add((CallExpr) child);
+            }
+        }
+        return calledFuncs;
     }
 
     public int getParamNum() {
@@ -43,12 +69,28 @@ public class FunctionDefStmt extends ASTStmt {
     @Override
     public ArrayList<ASTElement> getChildren() {
         // TODO: complete the definition of the method `getChildren`
-        return null;
+        ArrayList<ASTElement> children = new ArrayList<>();
+        children.add(args);
+        children.addAll(body);
+        children.addAll(decoratorList);
+        if (returns != null) {
+            children.add(returns);
+        }
+        return children;
     }
     @Override
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
-        return 0;
+        int numChild = 4;
+        numChild += this.args.countChildren();
+        numChild += this.returns.countChildren();
+        for (ASTStmt child : this.body) {
+            numChild += child.countChildren();
+        }
+        for (ASTExpr child : this.decoratorList) {
+            numChild += child.countChildren();
+        }
+        return numChild;
     }
 
     @Override

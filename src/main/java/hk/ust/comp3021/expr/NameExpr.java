@@ -12,17 +12,27 @@ public class NameExpr extends ASTExpr {
     public NameExpr(XMLNode node)  {
         // TODO: complete the definition of the constructor. Define the class as the subclass of ASTExpr.
         super(node);
+        this.exprType = ExprType.Name;
+        this.id = node.getAttribute("id");
+        XMLNode ctxNode = node.getChildByIdx(0);
+        if (ctxNode != null) {
+            this.ctx = new ASTEnumOp(ctxNode);
+        }
     }
 
     @Override
     public ArrayList<ASTElement> getChildren() {
         // TODO: complete the definition of the method `getChildren`
-        return null;
+        ArrayList<ASTElement> children = new ArrayList<>();
+        children.add(ctx);
+        return children;
+        // no child
     }
     @Override
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
-        return 0;
+        return 1;
+        // no child
     }
 
     @Override
@@ -37,8 +47,8 @@ public class NameExpr extends ASTExpr {
      * (2) changing the type signature of `public` methods
      * (3) changing the modifiers of the fields and methods, e.g., changing a modifier from "private" to "public"
      */
-    public void yourMethod() {
-
+    public String getId() {
+        return id;
     }
 
 }

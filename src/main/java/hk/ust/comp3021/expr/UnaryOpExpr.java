@@ -12,18 +12,33 @@ public class UnaryOpExpr extends ASTExpr {
     public UnaryOpExpr(XMLNode node) {
         // TODO: complete the definition of the constructor. Define the class as the subclass of ASTExpr.
         super(node);
+        this.exprType = ExprType.UnaryOp;
+        // Get the op node
+        XMLNode opNode = node.getChildByIdx(0);
+        if (opNode != null) {
+            this.op = new ASTEnumOp(opNode);
+        }
+
+        // Get the operand node
+        XMLNode operandNode = node.getChildByIdx(1);
+        if (operandNode != null) {
+            this.operand = ASTExpr.createASTExpr(operandNode);
+        }
     }
 
     @Override
     public ArrayList<ASTElement> getChildren() {
         // TODO: complete the definition of the method `getChildren`
-        return null;
+        ArrayList<ASTElement> children = new ArrayList<>();
+        children.add(op);
+        children.add(operand);
+        return children;
     }
 
     @Override
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
-        return 0;
+        return 1 + operand.countChildren();
     }
 
     @Override

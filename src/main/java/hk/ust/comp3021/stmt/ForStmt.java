@@ -15,17 +15,51 @@ public class ForStmt extends ASTStmt {
     public ForStmt(XMLNode node) {
         // TODO: complete the definition of the constructor. Define the class as the subclass of ASTExpr.
         super(node);
+        this.stmtType = StmtType.For;
+        XMLNode targetNode = node.getChildByIdx(0);
+        this.target = ASTExpr.createASTExpr(targetNode);
+
+        XMLNode iterNode = node.getChildByIdx(1);
+        this.iter = ASTExpr.createASTExpr(iterNode);
+
+        XMLNode bodyNode = node.getChildByIdx(2);
+        if (bodyNode != null) {
+            for (XMLNode child : bodyNode.getChildren()) {
+                this.body.add(ASTStmt.createASTStmt(child));
+            }
+        }
+
+        XMLNode orelseNode = node.getChildByIdx(3);
+        if (orelseNode != null) {
+            for (XMLNode child : orelseNode.getChildren()) {
+                this.orelse.add(ASTStmt.createASTStmt(child));
+            }
+        }
     }
 
     @Override
     public ArrayList<ASTElement> getChildren() {
         // TODO: complete the definition of the method `getChildren`
-        return null;
+        ArrayList<ASTElement> children = new ArrayList<>();
+        children.add(target);
+        children.add(iter);
+        children.addAll(body);
+        children.addAll(orelse);
+        return children;
     }
     @Override
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
-        return 0;
+        int numChild = 4;
+        numChild += iter.countChildren();
+        numChild += target.countChildren();
+        for (ASTStmt stmt : body) {
+            numChild += stmt.countChildren();
+        }
+        for (ASTStmt stmt : orelse) {
+            numChild += stmt.countChildren();
+        }
+        return numChild;
     }
 
     @Override

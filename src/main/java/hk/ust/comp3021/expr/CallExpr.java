@@ -13,6 +13,29 @@ public class CallExpr extends ASTExpr {
     public CallExpr(XMLNode node) {
         // TODO: complete the definition of the constructor. Define the class as the subclass of ASTExpr.
         super(node);
+        this.exprType = ExprType.Call;
+
+        // Get the func node
+        XMLNode funcNode = node.getChildByIdx(0);
+        if (funcNode != null) {
+            this.func = ASTExpr.createASTExpr(funcNode);
+        }
+
+        // Get the args nodes
+        XMLNode argsNode = node.getChildByIdx(1);
+        if (argsNode != null) {
+            for (XMLNode child : argsNode.getChildren()) {
+                this.args.add(ASTExpr.createASTExpr(child));
+            }
+        }
+
+        // Get the keywords nodes
+        XMLNode keywordsNode = node.getChildByIdx(2);
+        if (keywordsNode != null) {
+            for (XMLNode child : keywordsNode.getChildren()) {
+                this.keywords.add(new ASTKeyWord(child));
+            }
+        }
     }
 
     /*
@@ -24,18 +47,36 @@ public class CallExpr extends ASTExpr {
      */
     public String getCalledFuncName() {
         // TODO: complete the definitaion of the method `getCalledFuncName`
+        if (func instanceof NameExpr nameExpr) {
+            return nameExpr.getId();
+        } else if (func instanceof AttributeExpr attrExpr) {
+            return attrExpr.getAttr();
+        }
         return "";
     }
 
     @Override
     public ArrayList<ASTElement> getChildren() {
         // TODO: complete the definition of the method `getChildren`
-        return null;
+        ArrayList<ASTElement> children = new ArrayList<>();
+        children.add(func);
+        children.addAll(args);
+        children.addAll(keywords);
+        return children;
     }
     @Override
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
-        return 0;
+        int numChild = 1 + args.size() + keywords.size();
+        for(ASTExpr child : this.args)
+        {
+            numChild += child.countChildren();
+        }
+        for (ASTKeyWord child : this.keywords)
+        {
+            numChild += child.countChildren();
+        }
+        return numChild;
     }
 
     @Override

@@ -13,18 +13,40 @@ public class AttributeExpr extends ASTExpr {
     public AttributeExpr(XMLNode node) {
         super(node);
         // TODO: complete the definition of the constructor. Define the class as the subclass of ASTExpr.
+
+        this.exprType = ExprType.Attribute;
+
+        XMLNode valueNode = node.getChildByIdx(0);
+        if (valueNode != null) {
+            this.value = ASTExpr.createASTExpr(valueNode.getChildByIdx(0));
+        }
+
+        this.attr = node.getAttribute("attr");
+
+        XMLNode ctxNode = node.getChildByIdx(1);
+        if (ctxNode != null) {
+            this.ctx = new ASTEnumOp(ctxNode);
+        }
     }
 
     @Override
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
-        return 0;
+        int numChild = 2;
+        numChild += this.ctx.countChildren();
+        numChild += this.value.countChildren();
+        return numChild;
     }
 
     @Override
     public ArrayList<ASTElement> getChildren() {
         // TODO: complete the definition of the method `getChildren`
-        return null;
+        ArrayList<ASTElement> children = new ArrayList<>();
+        if (value != null) {
+            children.add(value);
+        }
+        return children;
+
     }
 
     @Override
@@ -39,7 +61,7 @@ public class AttributeExpr extends ASTExpr {
      * (2) changing the type signature of `public` methods
      * (3) changing the modifiers of the fields and methods, e.g., changing a modifier from "private" to "public"
      */
-    public void yourMethod() {
-
+    public String getAttr() {
+        return attr;
     }
 }

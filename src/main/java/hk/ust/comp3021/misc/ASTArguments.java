@@ -16,18 +16,22 @@ public class ASTArguments extends ASTElement {
         public ASTArg(XMLNode node) {
             // TODO: complete the definition of the constructor. Define the class as the subclass of ASTElement.
             super(node);
+            this.arg = node.getAttribute("arg");
+            this.annotation = ASTExpr.createASTExpr(node.getChildByIdx(0));
         }
 
         @Override
         public ArrayList<ASTElement> getChildren() {
             // TODO: complete the definition of the method `getChildren`
-            return null;
+            ArrayList<ASTElement> children = new ArrayList<>();
+            children.add(annotation);
+            return children;
         }
 
         @Override
         public int countChildren() {
             // TODO: complete the definition of the method `countChildren`
-            return 0;
+            return 1 + this.annotation.countChildren();
         }
 
         @Override
@@ -61,6 +65,14 @@ public class ASTArguments extends ASTElement {
     public ASTArguments(XMLNode node) {
         // TODO: complete the definition of the constructor. Define the class as the subclass of ASTElement.
         super(node);
+        for(XMLNode child : node.getChildByIdx(0).getChildren())
+        {
+            args.add(new ASTArg(child));
+        }
+        for(XMLNode child : node.getChildByIdx(1).getChildren())
+        {
+            defaults.add(ASTExpr.createASTExpr(child));
+        }
     }
 
 
@@ -69,19 +81,33 @@ public class ASTArguments extends ASTElement {
     */
     public int getParamNum() {
         // TODO: complete the definition of the method `getParamNum`
-        return 0;
+        int paraNum = args.size();
+        for (ASTArg child : this.args) {
+            paraNum += child.countChildren();
+        }
+        return paraNum;
     }
 
     @Override
     public ArrayList<ASTElement> getChildren() {
         // TODO: complete the definition of the method `getChildren`
-        return null;
+        ArrayList<ASTElement> children= new ArrayList<>();
+        children.addAll(args);
+        children.addAll(defaults);
+        return children;
     }
 
     @Override
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
-        return 0;
+        int count = defaults.size() + args.size();
+        for (ASTExpr child : defaults) {
+            count += child.countChildren();
+        }
+        for (ASTArg child : args) {
+            count += child.countChildren();
+        }
+        return count;
     }
 
     @Override
@@ -101,8 +127,12 @@ public class ASTArguments extends ASTElement {
      * (2) changing the type signature of `public` methods
      * (3) changing the modifiers of the fields and methods, e.g., changing a modifier from "private" to "public"
      */
-    public void yourMethod() {
+    public ArrayList<ASTArg> getArgs() {
+        return args;
+    }
 
+    public ArrayList<ASTExpr> getDefaults() {
+        return defaults;
     }
 
 }

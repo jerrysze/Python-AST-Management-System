@@ -27,7 +27,13 @@ public class ASTModule extends ASTElement {
     * */
     public ArrayList<FunctionDefStmt> getAllFunctions() {
         // TODO: complete the definition of the method `getAllFunctions`
-        return null;
+        ArrayList<FunctionDefStmt> functions = new ArrayList<>();
+        for (ASTStmt stmt : body) {
+            if (stmt instanceof FunctionDefStmt) {
+                functions.add((FunctionDefStmt) stmt);
+            }
+        }
+        return functions;
     }
 
     /*
@@ -41,7 +47,12 @@ public class ASTModule extends ASTElement {
      * */
     public ArrayList<ASTEnumOp> getAllOperators() {
         // TODO: complete the definition of the method `getAllOperators`
-        return null;
+        ArrayList<ASTEnumOp> operatorList = new ArrayList<>();
+        for (ASTStmt stmt : body) {
+            collectOperators(stmt, operatorList);
+        }
+        return operatorList;
+
     }
 
     /*
@@ -51,19 +62,27 @@ public class ASTModule extends ASTElement {
      * */
     public ArrayList<ASTElement> getAllNodes() {
         // TODO: complete the definition of the method `getAllNodes`
-        return null;
+        ArrayList<ASTElement> nodeList = new ArrayList<>();
+        for (ASTStmt stmt : body) {
+            collectNodes(stmt, nodeList);
+        }
+        return nodeList;
     }
 
     @Override
     public ArrayList<ASTElement> getChildren() {
         // TODO: complete the definition of the method `getChildren`
-        return null;
+        return new ArrayList<>(body);
     }
 
     @Override
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
-        return 0;
+        int count = body.size();
+        for (ASTStmt stmt : body) {
+            count += stmt.countChildren();
+        }
+        return count;
     }
 
     @Override
@@ -87,7 +106,19 @@ public class ASTModule extends ASTElement {
      * (2) changing the type signature of `public` methods
      * (3) changing the modifiers of the fields and methods, e.g., changing a modifier from "private" to "public"
      */
-    public void yourMethod() {
-
+    private void collectOperators(ASTElement element, ArrayList<ASTEnumOp> operatorList) {
+        if (element instanceof ASTEnumOp) {
+            operatorList.add((ASTEnumOp) element);
+        } else {
+            for (ASTElement child : element.getChildren()) {
+                collectOperators(child, operatorList);
+            }
+        }
+    }
+    private void collectNodes(ASTElement element, ArrayList<ASTElement> nodeList) {
+        nodeList.add(element);
+        for (ASTElement child : element.getChildren()) {
+            collectNodes(child, nodeList);
+        }
     }
 }

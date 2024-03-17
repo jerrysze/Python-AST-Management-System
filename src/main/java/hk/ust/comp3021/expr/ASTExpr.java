@@ -30,7 +30,21 @@ public abstract class ASTExpr extends ASTElement {
      */
     public static ASTExpr createASTExpr(XMLNode node) {
         // TODO: complete the definition of the method `createASTExpr`
-        return null;
+        String tagName = node.getTagName();
+        return switch (tagName) {
+            case "BoolOp" -> new BoolOpExpr(node);
+            case "BinOp" -> new BinOpExpr(node);
+            case "UnaryOp" -> new UnaryOpExpr(node);
+            case "Compare" -> new CompareExpr(node);
+            case "Call" -> new CallExpr(node);
+            case "Constant" -> new ConstantExpr(node);
+            case "Attribute" -> new AttributeExpr(node);
+            case "Subscript" -> new SubscriptExpr(node);
+            case "Name" -> new NameExpr(node);
+            case "List" -> new ListExpr(node);
+            case "Tuple" -> new TupleExpr(node);
+            default -> throw new IllegalArgumentException("Unsupported expression type: " + tagName);
+        };
     }
 
     /**

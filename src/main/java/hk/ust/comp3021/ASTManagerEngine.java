@@ -1,5 +1,6 @@
 package hk.ust.comp3021;
 
+import hk.ust.comp3021.misc.ASTEnumOp;
 import hk.ust.comp3021.stmt.*;
 import hk.ust.comp3021.utils.*;
 import java.io.*;
@@ -188,8 +189,18 @@ public class ASTManagerEngine {
      */
     public HashMap<String, Integer> calculateOp2Nums() {
         // TODO: complete the definition of the method `calculateOp2Nums`
-        return null;
+        HashMap<String, Integer> op2Nums = new HashMap<>();
+        for (ASTModule astModule : id2ASTModules.values()) {
+            // Traverse the AST and count the frequency of operators
+            ArrayList<ASTEnumOp> operators = astModule.getAllOperators();
+            for (ASTEnumOp operator : operators) {
+                String operatorName = operator.getOperatorName();
+                op2Nums.put(operatorName, op2Nums.getOrDefault(operatorName, 0) + 1);
+            }
+        }
+        return op2Nums;
     }
+
 
     /*
      * Find the operator whose has the largest frequency
@@ -197,7 +208,19 @@ public class ASTManagerEngine {
      */
     public String mostCommonUsedOp(HashMap<String, Integer> op2Num) {
         // TODO: complete the definition of the method `mostCommonUsedOp`
-        return "";
+        int maxFrequency = 0;
+        String mostCommonOp = null;
+
+        for (Map.Entry<String, Integer> entry : op2Num.entrySet()) {
+            String operator = entry.getKey();
+            int frequency = entry.getValue();
+
+            if (frequency > maxFrequency) {
+                maxFrequency = frequency;
+                mostCommonOp = operator;
+            }
+        }
+        return mostCommonOp;
     }
 
 

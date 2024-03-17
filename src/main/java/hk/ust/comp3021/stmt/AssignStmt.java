@@ -13,22 +13,57 @@ public class AssignStmt extends ASTStmt {
     public AssignStmt(XMLNode node) {
         // TODO: complete the definition of the constructor. Define the class as the subclass of ASTStmt.
         super(node);
+        this.stmtType = StmtType.Assign;
+        // Extract the targets
+        XMLNode targetsNode = node.getChildByIdx(0);
+        if (targetsNode != null) {
+            List<XMLNode> targetNodes = targetsNode.getChildren();
+            for (XMLNode targetNode : targetNodes) {
+                ASTExpr target = ASTExpr.createASTExpr(targetNode);
+                targets.add(target);
+            }
+        }
+        // Extract the value
+        XMLNode valueNode = node.getChildByIdx(1);
+        if (valueNode != null) {
+            value = ASTExpr.createASTExpr(valueNode);
+        }
     }
 
     @Override
     public ArrayList<ASTElement> getChildren() {
         // TODO: complete the definition of the method `getChildren`
-        return null;
+        ArrayList<ASTElement> children = new ArrayList<>(targets);
+        children.add(value);
+        return children;
     }
 
     @Override
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
-        return 0;
+        int numChild = 0;
+        for (ASTExpr target : targets) {
+            numChild += target.countChildren();
+        }
+        if (value != null) {
+            numChild += value.countChildren();
+        }
+        return numChild + targets.size() + 1;
     }
     @Override
     public void printByPos(StringBuilder str) {
         // TODO: (Bonus) complete the definition of the method `printByPos`
+        if (!targets.isEmpty()) {
+            for (ASTExpr target : targets) {
+                target.printByPos(str);
+                str.append(", ");
+            }
+            str.setLength(str.length() - 2); // Remove the extra comma and space
+            str.append(" = ");
+        }
+        if (value != null) {
+            value.printByPos(str);
+        }
     }
 
     /**
