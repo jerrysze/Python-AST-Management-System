@@ -28,11 +28,7 @@ public class ASTModule extends ASTElement {
     public ArrayList<FunctionDefStmt> getAllFunctions() {
         // TODO: complete the definition of the method `getAllFunctions`
         ArrayList<FunctionDefStmt> functions = new ArrayList<>();
-        for (ASTStmt stmt : body) {
-            if (stmt instanceof FunctionDefStmt) {
-                functions.add((FunctionDefStmt) stmt);
-            }
-        }
+        getAllFunctionsRecursive(body, functions);
         return functions;
     }
 
@@ -62,11 +58,13 @@ public class ASTModule extends ASTElement {
      * */
     public ArrayList<ASTElement> getAllNodes() {
         // TODO: complete the definition of the method `getAllNodes`
-        ArrayList<ASTElement> nodeList = new ArrayList<>();
+        ArrayList<ASTElement> nodes = new ArrayList<>();
         for (ASTStmt stmt : body) {
-            collectNodes(stmt, nodeList);
+            nodes.add(stmt);
+            ArrayList<ASTElement> children = stmt.getChildren();
+            nodes.addAll(children);
         }
-        return nodeList;
+        return nodes;
     }
 
     @Override
@@ -78,11 +76,7 @@ public class ASTModule extends ASTElement {
     @Override
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
-        int count = body.size();
-        for (ASTStmt stmt : body) {
-            count += stmt.countChildren();
-        }
-        return count;
+        return body.size();
     }
 
     @Override
@@ -119,6 +113,16 @@ public class ASTModule extends ASTElement {
         nodeList.add(element);
         for (ASTElement child : element.getChildren()) {
             collectNodes(child, nodeList);
+        }
+    }
+    private void getAllFunctionsRecursive(ArrayList<ASTStmt> stmts, ArrayList<FunctionDefStmt> functions) {
+        for (ASTStmt stmt : stmts) {
+            if (stmt instanceof FunctionDefStmt) {
+                functions.add((FunctionDefStmt) stmt);
+            }
+            ArrayList<ASTElement> children = stmt.getChildren();
+
+            getAllFunctionsRecursive(children, functions);
         }
     }
 }

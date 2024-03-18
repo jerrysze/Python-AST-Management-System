@@ -34,21 +34,20 @@ public class AssignStmt extends ASTStmt {
     public ArrayList<ASTElement> getChildren() {
         // TODO: complete the definition of the method `getChildren`
         ArrayList<ASTElement> children = new ArrayList<>(targets);
-        children.add(value);
+        if (value != null) {
+            children.add(value);
+        }
         return children;
     }
 
     @Override
     public int countChildren() {
         // TODO: complete the definition of the method `countChildren`
-        int numChild = 0;
-        for (ASTExpr target : targets) {
-            numChild += target.countChildren();
-        }
+        int count = targets.size();
         if (value != null) {
-            numChild += value.countChildren();
+            count++;
         }
-        return numChild + targets.size() + 1;
+        return (count+1);
     }
     @Override
     public void printByPos(StringBuilder str) {
@@ -75,8 +74,12 @@ public class AssignStmt extends ASTStmt {
      * (3) changing the modifiers of the fields and methods, e.g., changing a modifier from "private"
      * to "public"
      */
-    @Override
-    public void yourMethod() {
+    public ArrayList<ASTExpr> getTargets() {
+        return targets;
+    }
+
+    public ASTExpr getValue() {
+        return value;
     }
 
 }

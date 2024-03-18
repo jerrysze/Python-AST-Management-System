@@ -49,7 +49,7 @@ public abstract class ASTStmt extends ASTElement {
             case "Expr" -> new ExprStmt(node);
             case "Break" -> new BreakStmt(node);
             case "Continue" -> new ContinueStmt(node);
-            default -> throw new IllegalArgumentException("Unknown statement type: " + tagName);
+            default -> throw new IllegalArgumentException("Invalid statement type: " + tagName);
         };
     }
 
@@ -62,6 +62,4 @@ public abstract class ASTStmt extends ASTElement {
      * (3) changing the modifiers of the fields and methods, e.g., changing a modifier from "private"
      * to "public"
      */
-    public void yourMethod() {
-    }
 }

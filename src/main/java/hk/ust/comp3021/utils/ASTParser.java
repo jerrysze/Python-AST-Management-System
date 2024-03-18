@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
 
 public class ASTParser {
     private final String xmlFileID;
@@ -65,10 +68,9 @@ public class ASTParser {
         // TODO: complete the definition of the method `parse2XMLNode`
         try {
             List<String> lines = readXMLFile(xmlFileID);
-            rootXMLNode = parseXMLNode(lines, 0, lines.size() - 1, null);
+            rootXMLNode = parseXMLTree(lines);
         } catch (IOException e) {
             isErr = true;
-            e.printStackTrace();
         }
     }
 
@@ -79,87 +81,69 @@ public class ASTParser {
      * (2) changing the type signature of `public` methods
      * (3) changing the modifiers of the fields and methods, e.g., changing a modifier from "private" to "public"
      */
+
+
     private List<String> readXMLFile(String filePath) throws IOException {
         List<String> lines = new ArrayList<>();
-        BufferedReader reader = new BufferedReader(new FileReader(filePath));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            lines.add(line.trim());
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line.trim());
+            }
         }
-        reader.close();
         return lines;
     }
-    private XMLNode parseXMLNode(List<String> lines, int startLine, int endLine, XMLNode parent) {
-        if (startLine > endLine) {
-            return null;
+
+    private XMLNode parseXMLNode(String line) {
+        String tag = line.substring(1, line.indexOf(" "));
+        Map<String, String> attributes = extractAttributes(line);
+        return new XMLNode(tag, attributes);
+    }
+
+    private Map<String, String> extractAttributes(String line) {
+        Map<String, String> attributes = new HashMap<>();
+        int startIndex = line.indexOf(" ") + 1;
+        int endIndex = line.lastIndexOf("/");
+        while (startIndex < endIndex) {
+            int equalIndex = line.indexOf("=", startIndex);
+            int valueStartIndex = line.indexOf("\"", equalIndex) + 1;
+            int valueEndIndex = line.indexOf("\"", valueStartIndex);
+            String attribute = line.substring(startIndex, equalIndex).trim();
+            String value = line.substring(valueStartIndex, valueEndIndex);
+            attributes.put(attribute, value);
+            startIndex = valueEndIndex + 1;
         }
+        return attributes;
+    }
 
-        String startTag = lines.get(startLine);
-        String endTag = lines.get(endLine);
+    private XMLNode parseXMLTree(List<String> lines) {
+        XMLNode root = null;
+        XMLNode currentNode = null;
+        List<XMLNode> parentStack = new ArrayList<>();
 
-        String tagName = startTag.replaceAll("<|>|/|\\s.*", "");
-        XMLNode xmlNode = new XMLNode(tagName);
-
-        if (startTag.contains("=")) {
-            String[] attributes = startTag.split("\\s+");
-            for (int i = 1; i < attributes.length; i++) {
-                String attribute = attributes[i].trim();
-                if (attribute.contains("=")) {
-                    String[] keyValue = attribute.split("=");
-                    String key = keyValue[0];
-                    String value = keyValue[1].replaceAll("\"", "");
-                    xmlNode.getAttributes().put(key, value);
+        for (String line : lines) {
+            if (line.startsWith("<")) {
+                XMLNode newNode = parseXMLNode(line);
+                if (root == null) {
+                    root = newNode;
+                    currentNode = root;
+                } else {
+                    if (currentNode != null) {
+                        currentNode.addChild(newNode);
+                        parentStack.add(currentNode);
+                    }
+                    currentNode = newNode;
+                }
+            } else if (line.startsWith("</")) {
+                if (!parentStack.isEmpty()) {
+                    currentNode = parentStack.remove(parentStack.size() - 1);
                 }
             }
         }
-
-        if (startTag.endsWith("/>")) {
-            return xmlNode;
-        }
-
-        int childStartLine = startLine + 1;
-        int childEndLine = endLine - 1;
-        while (!lines.get(childEndLine).equals(endTag)) {
-            childEndLine--;
-        }
-
-        int childStartIndex = childStartLine;
-        while (childStartIndex <= childEndLine) {
-            String childTag = lines.get(childStartIndex);
-            if (childTag.startsWith("<") && !childTag.startsWith("</")) {
-                int childEndIndex = findClosingTagIndex(lines, childStartIndex, childEndLine);
-                XMLNode childNode = parseXMLNode(lines, childStartIndex, childEndIndex, xmlNode);
-                xmlNode.getChildren().add(childNode);
-                childStartIndex = childEndIndex + 1;
-            } else {
-                childStartIndex++;
-            }
-        }
-
-        xmlNode.setParent(parent);
-        return xmlNode;
+        return root;
     }
 
-    private int findClosingTagIndex(List<String> lines, int startIndex, int endIndex) {
-        String startTag = lines.get(startIndex);
-        String tagName = startTag.replaceAll("<|>|/|\\s.*", "");
-        String endTag = "</" + tagName + ">";
 
-        int depth = 1;
-        for (int i = startIndex + 1; i <= endIndex; i++) {
-            String line = lines.get(i);
-            if (line.equals(startTag)) {
-                depth++;
-            } else if (line.equals(endTag)) {
-                depth--;
-                if (depth == 0) {
-                    return i;
-                }
-            }
-        }
-
-        return endIndex;
-    }
     public XMLNode getRootXMLNode(){
         return rootXMLNode;
     }

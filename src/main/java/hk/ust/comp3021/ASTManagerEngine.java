@@ -250,7 +250,29 @@ public class ASTManagerEngine {
      */
     public HashMap<String, Set<String>> calculateCalledFunc() {
         // TODO: complete the definition of the method `calculateCalledFunc`
-        return null;
+        HashMap<String, Set<String>> func2CalledFuncs = new HashMap<>();
+
+        // Find all FunctionDefStmt nodes (declarative functions)
+        List<ASTNode> functionDefStmts = rootASTModule.getNodesByType(ASTNode.Type.FunctionDefStmt);
+
+        // Iterate over each FunctionDefStmt node
+        for (ASTNode functionDefStmt : functionDefStmts) {
+            String functionName = functionDefStmt.getName();
+            Set<String> calledFuncs = new HashSet<>();
+
+            // Find all CallExpr nodes within the current function
+            List<ASTNode> callExprs = functionDefStmt.getDescendantsByType(ASTNode.Type.CallExpr);
+
+            // Extract the called function names from the CallExpr nodes
+            for (ASTNode callExpr : callExprs) {
+                String calledFuncName = getCalledFuncName(callExpr);
+                calledFuncs.add(calledFuncName);
+            }
+
+            func2CalledFuncs.put(functionName, calledFuncs);
+        }
+
+        return func2CalledFuncs;
     }
 
     public void userInterfaceCallFuncs() {
