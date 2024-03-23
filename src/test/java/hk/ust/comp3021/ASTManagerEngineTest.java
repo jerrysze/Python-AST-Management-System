@@ -17,7 +17,7 @@ public class ASTManagerEngineTest {
     @Tag(TestKind.PUBLIC)
     @Test
     void testParse2XMLNode() {
-        ASTParser parser = new ASTParser("29");
+        ASTParser parser = new ASTParser("1");
         parser.parse2XMLNode();
         assertNotNull(parser.getRootXMLNode());
         assertEquals(parser.getRootXMLNode().getTagName(), "ast");
