@@ -4,7 +4,7 @@ import hk.ust.comp3021.expr.*;
 import hk.ust.comp3021.misc.*;
 import hk.ust.comp3021.utils.*;
 
-import java.awt.image.Kernel;
+//import java.awt.image.Kernel;
 import java.util.*;
 
 public class ClassDefStmt extends ASTStmt {

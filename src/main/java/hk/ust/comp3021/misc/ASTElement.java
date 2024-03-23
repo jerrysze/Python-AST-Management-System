@@ -1,6 +1,6 @@
 package hk.ust.comp3021.misc;
 
-import hk.ust.comp3021.expr.CallExpr;
+//import hk.ust.comp3021.expr.CallExpr;
 import hk.ust.comp3021.utils.*;
 import java.util.*;
 import java.util.function.Consumer;
@@ -138,7 +138,9 @@ public abstract class ASTElement {
         return selfChildren;
     }
 
-    public int countSelfChildren() { return selfChildren.size(); }
+    public int countSelfChildren(){
+        return selfChildren.size();
+    }
 
     public <T> ArrayList<T> getSelectedChildren(Class<T> cls) {
         return getChildren().stream()

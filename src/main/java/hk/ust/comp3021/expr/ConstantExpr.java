@@ -1,8 +1,8 @@
 package hk.ust.comp3021.expr;
 
-import hk.ust.comp3021.misc.*;
+//import hk.ust.comp3021.misc.*;
 import hk.ust.comp3021.utils.*;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 public class ConstantExpr extends ASTExpr {
     // Constant(constant value, string? kind)
@@ -33,7 +33,4 @@ public class ConstantExpr extends ASTExpr {
      * (2) changing the type signature of `public` methods
      * (3) changing the modifiers of the fields and methods, e.g., changing a modifier from "private" to "public"
      */
-    public void yourMethod() {
-
-    }
 }

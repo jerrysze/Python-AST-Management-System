@@ -95,7 +95,7 @@ public class ASTParser {
         private int line = 1;
         private int col = 1;
 
-        public Parser(BufferedInputStream bis) {
+        Parser(BufferedInputStream bis) {
             this.bis = bis;
         }
 
